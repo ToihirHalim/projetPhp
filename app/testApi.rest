@@ -1,0 +1,52 @@
+GET http://localhost/projetPhp/public/api/users
+
+###
+
+GET http://localhost/projetPhp/public/api/user/7
+
+###
+
+GET http://localhost/projetPhp/public/api/carte
+
+###
+
+POST http://localhost/projetPhp/public/api/login
+content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "123456789"
+}
+
+###
+
+POST http://localhost/projetPhp/public/api/register
+content-type: application/json
+
+{
+    "email": "helloest@test.com",
+    "password": "123456789",
+    "name": "hellotest",
+    "prenom": "hellotestprenom",
+    "age": 12,
+    "sexe": "F",
+    "adresse": "boukhalef",
+    "telephone": 6574235641,
+    "ville": "Tanger"
+}
+
+###
+
+POST http://localhost/projetPhp/public/api/formulaire
+content-type: application/json
+
+{
+    "user_id": 2,
+    "test": 1,
+    "isolement": 1,
+    "situations": "1,2",
+    "symptomes": "5,6,9",
+    "toux": 15
+}
+
+
