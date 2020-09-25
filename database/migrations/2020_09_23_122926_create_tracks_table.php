@@ -14,11 +14,11 @@ class CreateTracksTable extends Migration
     public function up()
     {
         Schema::create('tracks', function (Blueprint $table) {
-            $table->bigIncrements();
-            $table->integer('ActiveCases')->default(0);
-            $table->integer('DailyCases')->default(0);
-            $table->integer('DailyRecovered')->default(0);
-            $table->integer('TotalCases')->default(0);
+            $table->bigIncrements('id');
+            $table->integer('activeCases')->default(0);
+            $table->integer('dailyCases')->default(0);
+            $table->integer('dailyRecovered')->default(0);
+            $table->integer('totalCases')->default(0);
             $table->date('date');
             $table->timestamps();
         });

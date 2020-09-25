@@ -75,6 +75,7 @@
             </div>
         </nav>
         <div class="container">
+
             <br>
             <div class="row ">
                 <h4>{{date('D M Y')}}</h4>
@@ -121,6 +122,10 @@
                     <h4 style="text-align:center"> Graphe Total Cases</h4><br>
                     <div id="chart3" style="height: 250px; "></div>
                 </div>
+                <div class="col">
+                    <h4 style="text-align:center"> Graphe daily recovery</h4><br>
+                    <div id="chart6" style="height: 250px; "></div>
+                </div>
             </div>
             <br><br><br>
         </div>
@@ -135,15 +140,16 @@
         el: '#chart',
         url: "@chart('sample_chart')",
         data: {
-            chart: { "labels": <?php echo json_encode($data['totalCases']['dates']); ?> },
+            chart: { "labels": <?php echo json_encode($data['dates']); ?> },
             datasets: [
-                { "name": "Active Cases", "values": <?php echo json_encode($data['activeCases']['values']); ?> },
-                { "name": "Daily Cases", "values": <?php echo json_encode($data['dailyCases']['values']); ?> },
-                { "name": "Total Cases", "values": <?php echo json_encode($data['totalCases']['values']); ?> },
-            ],
+                { "name": "Active Cases", "values": <?php echo json_encode($data['activeCases']); ?> },
+                { "name": "Daily Cases", "values": <?php echo json_encode($data['dailyCases']); ?> },
+                { "name": "Total Cases", "values": <?php echo json_encode($data['totalCases']); ?> },
+                { "name": "Daily Recovered", "values": <?php echo json_encode($data['dailyRecovered']); ?> }
+            ]
         },
         hooks: new ChartisanHooks()
-            .colors(['blue', 'orange', 'red'])
+            .colors(['blue', 'orange', 'red', 'gray'])
             .legend({ position: 'left' })
             .datasets([{ type: 'line', fill: false }, 'line']),
       });
@@ -152,9 +158,9 @@
         el: '#chart1',
         url: "@chart('sample_chart')",
         data: {
-            chart: { "labels": <?php echo json_encode($data['activeCases']['dates']); ?> },
+            chart: { "labels": <?php echo json_encode($data['dates']); ?> },
             datasets: [
-                { "name": "Active Cases", "values": <?php echo json_encode($data['activeCases']['values']); ?> },
+                { "name": "Active Cases", "values": <?php echo json_encode($data['activeCases']); ?> },
             ],
         },
         hooks: new ChartisanHooks()
@@ -167,9 +173,9 @@
         el: '#chart2',
         url: "@chart('sample_chart')",
         data: {
-            chart: { "labels": <?php echo json_encode($data['dailyCases']['dates']); ?> },
+            chart: { "labels": <?php echo json_encode($data['dates']); ?> },
             datasets: [
-                { "name": "Daily Cases", "values": <?php echo json_encode($data['dailyCases']['values']); ?> },
+                { "name": "Daily Cases", "values": <?php echo json_encode($data['dailyCases']); ?> },
             ],
         },
         hooks: new ChartisanHooks()
@@ -182,9 +188,9 @@
         el: '#chart3',
         url: "@chart('sample_chart')",
         data: {
-            chart: { "labels": <?php echo json_encode($data['totalCases']['dates']); ?> },
+            chart: { "labels": <?php echo json_encode($data['dates']); ?> },
             datasets: [
-                { "name": "Total Cases", "values": <?php echo json_encode($data['totalCases']['values']); ?> },
+                { "name": "Total Cases", "values": <?php echo json_encode($data['totalCases']); ?> },
             ],
         },
         hooks: new ChartisanHooks()
@@ -221,6 +227,22 @@
             .legend({ position: 'left' })
             .datasets([{ type: 'bar', fill: false }, 'bar']),
       });
+
+      const chart6 = new Chartisan({
+        el: '#chart6',
+        url: "@chart('sample_chart')",
+        data: {
+            chart: { "labels": <?php echo json_encode($data['dates']); ?> },
+            datasets: [
+                { "name": "Total Cases", "values": <?php echo json_encode($data['dailyRecovered']); ?> },
+            ],
+        },
+        hooks: new ChartisanHooks()
+            .colors(['blue'])
+            .legend({ position: 'left' })
+            .datasets([{ type: 'line', fill: false }, 'bar']),
+      });
+
     </script>
     </body>
 </html>

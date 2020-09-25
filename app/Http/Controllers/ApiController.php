@@ -13,7 +13,7 @@ class ApiController extends Controller
 {
     public function users(){
         return [
-            "status" => "working",
+            "status" => "succes",
             "users" => User::all()
         ];
     }
@@ -23,7 +23,7 @@ class ApiController extends Controller
         $user->infoPersonnelle;
 
         return [
-            "status" => "working",
+            "status" => "succes",
             "user" => $user
         ];;
     }
@@ -94,7 +94,7 @@ class ApiController extends Controller
         $formulaire->save();
 
         return [
-            "status" => "working",
+            "status" => "succes",
             "form" => $formulaire
         ];
     }
@@ -117,7 +117,7 @@ class ApiController extends Controller
         }
 
         return [
-            "satutus" => "working",
+            "satutus" => "succes",
             "total_contamine" => $contamines->count(),
             "villes" => $villes
         ];

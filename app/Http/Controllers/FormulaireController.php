@@ -7,9 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Formulaire;
 use App\User;
-use App\ActiveCases;
-use App\DailyCases;
-use App\TotalCases;
+use App\Track;
 use App\Situation;
 
 class FormulaireController extends Controller
@@ -95,11 +93,32 @@ class FormulaireController extends Controller
     public function update(Formulaire $formulaire){
         $sit = $formulaire->user->situation;
         $resultat = request('situation');
-        
+
         $data = [
             "situation" => $resultat,
         ];
-        if(($resultat == 'Positif'  && $sit->situatio != 'Positif') || ($sit->situation == 'Unknown')){
+
+        $lastTrack = $this->lastTrack();
+        $dailyCases = $lastTrack->dailyCases;
+        $activeCases = $lastTrack->activeCases;
+        $totalCases = $lastTrack->totalCases;
+        $dailyRecovered = $lastTrack->dailyRecovered;
+        
+        
+        if($resultat == 'Positif' && $sit->situatio != 'Positif'){
+            $dailyCases++;
+            $activeCases++;
+
+            if($sit->situatio != 'Recovered'){
+                $totalCases++;
+            }
+        }else if($resultat == 'Negatif' && $sit->situatio == 'Positif'){
+            $dailyRecovered++;
+            $activeCases--;
+        }
+        
+
+        if(($resultat == 'Positif' && $sit->situatio != 'Positif') || ($sit->situation == 'Unknown')){
             $sit->update($data);
         }else if($sit->situation == 'Positif' && $resultat == 'Negatif'){
             $data = [
@@ -111,138 +130,72 @@ class FormulaireController extends Controller
             "Resultat" => $resultat,
         ];
         $formulaire->update($data);
-        $this->updateGraphs();
+        
+        $data = [
+            "activeCases" => $activeCases,
+            "totalCases" => $totalCases,
+            "dailyCases" => $dailyCases,
+            "dailyRecovered" => $dailyRecovered
+        ];
+
+        $lastTrack->update($data);
+        
         return redirect('/demandes/nontraite');
     }
 
-    public function updateGraphs(){
-        //derniers update
-        $last1 = DailyCases::latest()->first();
-        $last2 = ActiveCases::latest()->first();
-        $last3 = TotalCases::latest()->first();
+    public function lastTrack(){
+        $lastTrack = Track::latest()->first();
 
         $today = date('Y-m-d');
         $conpareday = strtotime($today);
-        $data = [
-            'date' => $today
-        ];
-        //premier element 0
-        if($last1 == null){
-            DailyCases::create($data);
-            $last1 = DailyCases::latest()->first();
-        }
-        if($last2 == null){
-            ActiveCases::create($data);
-            $last2 = ActiveCases::latest()->first();
-        }
-        if($last3 == null){
-            TotalCases::create($data);
-            $last3 = TotalCases::latest()->first();
-        }
-        
-        //new values
-        $newActiveCases = Situation::wheresituation('Positif')->count();
-        $newTotalCases = Situation::wheresituation('Positif')->count();
-        $newTotalCases += Situation::wheresituation('Recovered')->count();
-        $newDailyCases = 0;
-        $situations = Situation::all();
-
-        foreach($situations as $situation){
-            $date = strtotime($situation->updated_at);
-            $date = date('Y-m-d',$date);
-            $date = strtotime($date);
-            if($situation->situation == 'Positif' && $date == $conpareday )
-                $newDailyCases++;
-        }
-        // create blank date and update
-        $lastday1 = strtotime($last1->date);
-        $lastday2 = strtotime($last2->date);
-        $lastday3 = strtotime($last3->date);
-        $today = strtotime($today);
         $yesterday = strtotime('yesterday');
-        //Daily cases
+
+        if($lastTrack == null){
+            $lastTrack = new Track();
+            $lastTrack->date = $today;
+            $lastTrack->save();
+            return $lastTrack;
+        }
+
+        
+        $lastday = strtotime($lastTrack->date);
+
         while(true){
-            if($lastday1 == $today ){
-                $data = [
-                    'value' => $newDailyCases, 
-                ];
-                $last1->update($data);
-            break;
-            }else if($lastday1 == $yesterday){
-                $data = [
-                    'value' => $newDailyCases,
-                    'date' => date('Y-m-d', $today),
-                ];
-                DailyCases::create($data);
-            break;
-            }else if($lastday1 < $today){
-                $nextday = strtotime('next day', $lastday1);
-                $data = [
-                    'date' => date('Y-m-d', $nextday),
-                ];
-                DailyCases::create($data);
-                $last1 = DailyCases::latest()->first();
-                $lastday1 = strtotime($last1->date);
+            if($lastday == $conpareday ){
+
+                return $lastTrack;
+
+            }else if($lastday == $yesterday){
+                
+                $lastTrack = new Track();
+                $lastTrack->date = $today;
+                $lastTrack->save();
+
+                return $lastTrack;
+
+            }else if($lastday < $conpareday){
+                $activeCases = $lastTrack->activeCases;
+                $totalCases = $lastTrack->totalCases;
+                $nextday = strtotime('next day', $lastday);
+                $nextday = date('Y-m-d', $nextday);
+
+                $lastTrack = new Track();
+                $lastTrack->totalCases = $totalCases;
+                $lastTrack->activeCases = $activeCases;
+                $lastTrack->date = $nextday;
+                $lastTrack->save();
+
+                $lastday = strtotime($lastTrack->date);
             }
         }
 
-        //active cases
-        while(true){
-            if($lastday2 == $today ){
-                $data = [
-                    'value' => $newActiveCases, 
-                ];
-                $last2->update($data);
-            break;
-            }else if($lastday2 == $yesterday){
-                $data = [
-                    'value' => $newActiveCases,
-                    'date' => date('Y-m-d', $today),
-                ];
-                ActiveCases::create($data);
-            break;
-            }else if($lastday2 < $today){
-                $nextday = strtotime('next day', $lastday2);
-                $data = [
-                    'value' => $last2->value,
-                    'date' => date('Y-m-d', $nextday),
-                ];
-                ActiveCases::create($data);
-                $last2 = ActiveCases::latest()->first();
-                $lastday2 = strtotime($last2->date);
-            }
-        }
-        // total cases
-        while(true){
-            if($lastday3 == $today ){
-                $data = [
-                    'value' => $newTotalCases, 
-                ];
-                $last3->update($data);
-            break;
-            }else if($lastday3 == $yesterday){
-                $data = [
-                    'value' => $newTotalCases,
-                    'date' => date('Y-m-d', $today),
-                ];
-                TotalCases::create($data);
-            break;
-            }else if($lastday3 < $today){
-                $nextday = strtotime('next day', $lastday3);
-                $data = [
-                    'value' => $last3->value,
-                    'date' => date('Y-m-d', $nextday),
-                ];
-                TotalCases::create($data);
-                $last3 = TotalCases::latest()->first();
-                $lastday3 = strtotime($last3->date);
-            }
-        }
+        return $lastTrack;
     }
-    
+ 
     public function getvalues(Formulaire $formulaire){
         $array1 = 'array('. $formulaire->situations .')';
         $parsed1 = eval("return " . $array1 . ";");
+
         $situations = [];
         foreach($parsed1 as $value){
             if($value == 1)

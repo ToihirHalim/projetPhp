@@ -2,13 +2,14 @@ GET http://localhost/projetPhp/public/api/users
 
 ###
 
-GET http://localhost/projetPhp/public/api/user/7
+GET http://localhost/projetPhp/public/api/user/1
 
 ###
 
 GET http://localhost/projetPhp/public/api/carte
 
 ###
+
 
 POST http://localhost/projetPhp/public/api/login
 content-type: application/json
@@ -24,15 +25,15 @@ POST http://localhost/projetPhp/public/api/register
 content-type: application/json
 
 {
-    "email": "helloest@test.com",
+    "email": "test3t@test.com",
     "password": "123456789",
-    "name": "hellotest",
-    "prenom": "hellotestprenom",
-    "age": 12,
+    "name": "test3",
+    "prenom": "test3Prenom",
+    "age": 23,
     "sexe": "F",
-    "adresse": "boukhalef",
-    "telephone": 6574235641,
-    "ville": "Tanger"
+    "adresse": "G5",
+    "telephone": 6872569852,
+    "ville": "Rabat"
 }
 
 ###
@@ -42,11 +43,11 @@ content-type: application/json
 
 {
     "user_id": 2,
-    "test": 1,
-    "isolement": 1,
-    "situations": "1,2",
-    "symptomes": "5,6,9",
-    "toux": 15
+    "test": 3,
+    "isolement": 3,
+    "situations": "",
+    "symptomes": "",
+    "toux": 3
 }
 
 
