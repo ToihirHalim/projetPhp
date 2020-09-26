@@ -84,7 +84,7 @@ class FormulaireController extends Controller
 
     public function show(){
         $user = Auth::user();
-
+        
         return view('formular',[
             'user' => $user,
         ]);
@@ -104,7 +104,7 @@ class FormulaireController extends Controller
         $totalCases = $lastTrack->totalCases;
         $dailyRecovered = $lastTrack->dailyRecovered;
         
-        
+        //TODO: need to recheck
         if($resultat == 'Positif' && $sit->situatio != 'Positif'){
             $dailyCases++;
             $activeCases++;
@@ -117,7 +117,6 @@ class FormulaireController extends Controller
             $activeCases--;
         }
         
-
         if(($resultat == 'Positif' && $sit->situatio != 'Positif') || ($sit->situation == 'Unknown')){
             $sit->update($data);
         }else if($sit->situation == 'Positif' && $resultat == 'Negatif'){
@@ -167,7 +166,12 @@ class FormulaireController extends Controller
 
             }else if($lastday == $yesterday){
                 
+                $activeCases = $lastTrack->activeCases;
+                $totalCases = $lastTrack->totalCases;
+
                 $lastTrack = new Track();
+                $lastTrack->totalCases = $totalCases;
+                $lastTrack->activeCases = $activeCases;
                 $lastTrack->date = $today;
                 $lastTrack->save();
 
