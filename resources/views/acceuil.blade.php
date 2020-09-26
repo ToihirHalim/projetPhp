@@ -123,7 +123,7 @@
                     <div id="chart3" style="height: 250px; "></div>
                 </div>
                 <div class="col">
-                    <h4 style="text-align:center"> Graphe daily recovery</h4><br>
+                    <h4 style="text-align:center"> Graphe daily recovered</h4><br>
                     <div id="chart6" style="height: 250px; "></div>
                 </div>
             </div>
@@ -234,7 +234,7 @@
         data: {
             chart: { "labels": <?php echo json_encode($data['dates']); ?> },
             datasets: [
-                { "name": "Total Cases", "values": <?php echo json_encode($data['dailyRecovered']); ?> },
+                { "name": "Daily Recovered", "values": <?php echo json_encode($data['dailyRecovered']); ?> },
             ],
         },
         hooks: new ChartisanHooks()

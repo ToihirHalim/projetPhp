@@ -104,20 +104,22 @@ class FormulaireController extends Controller
         $totalCases = $lastTrack->totalCases;
         $dailyRecovered = $lastTrack->dailyRecovered;
         
-        //TODO: need to recheck
-        if($resultat == 'Positif' && $sit->situatio != 'Positif'){
+
+        if($resultat == 'Positif' && $sit->situation != 'Positif'){
             $dailyCases++;
             $activeCases++;
 
             if($sit->situatio != 'Recovered'){
                 $totalCases++;
             }
-        }else if($resultat == 'Negatif' && $sit->situatio == 'Positif'){
+
+        }else if($resultat == 'Negatif' && $sit->situation == 'Positif'){
             $dailyRecovered++;
             $activeCases--;
         }
-        
-        if(($resultat == 'Positif' && $sit->situatio != 'Positif') || ($sit->situation == 'Unknown')){
+
+
+        if(($resultat == 'Positif' && $sit->situation != 'Positif') || ($sit->situation == 'Unknown')){
             $sit->update($data);
         }else if($sit->situation == 'Positif' && $resultat == 'Negatif'){
             $data = [
