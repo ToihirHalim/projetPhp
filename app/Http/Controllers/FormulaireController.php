@@ -109,7 +109,7 @@ class FormulaireController extends Controller
             $dailyCases++;
             $activeCases++;
 
-            if($sit->situatio != 'Recovered'){
+            if($sit->situation != 'Recovered'){
                 $totalCases++;
             }
 
@@ -136,7 +136,7 @@ class FormulaireController extends Controller
             "activeCases" => $activeCases,
             "totalCases" => $totalCases,
             "dailyCases" => $dailyCases,
-            "dailyRecovered" => $dailyRecovered
+            "dailyRecovered" => $dailyRecovered ? $dailyRecovered  : 0
         ];
 
         $lastTrack->update($data);

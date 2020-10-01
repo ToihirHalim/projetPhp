@@ -2,7 +2,7 @@ GET http://localhost/projetPhp/public/api/users
 
 ###
 
-GET http://localhost/projetPhp/public/api/user/1
+GET http://localhost/projetPhp/public/api/user/3
 
 ###
 
@@ -15,7 +15,7 @@ POST http://localhost/projetPhp/public/api/login
 content-type: application/json
 
 {
-    "email": "test@test.com",
+    "email": "test1t@test.com",
     "password": "123456789"
 }
 
@@ -25,15 +25,15 @@ POST http://localhost/projetPhp/public/api/register
 content-type: application/json
 
 {
-    "email": "test3t@test.com",
+    "email": "test5@test.com",
     "password": "123456789",
-    "name": "test3",
-    "prenom": "test3Prenom",
-    "age": 23,
-    "sexe": "F",
-    "adresse": "G5",
+    "name": "test5",
+    "prenom": "test5Prenom",
+    "age": 30,
+    "sexe": "M",
+    "adresse": "mesnana",
     "telephone": 6872569852,
-    "ville": "Rabat"
+    "ville": "Tanger"
 }
 
 ###
@@ -42,7 +42,7 @@ POST http://localhost/projetPhp/public/api/formulaire
 content-type: application/json
 
 {
-    "user_id": 2,
+    "user_id": 1,
     "test": 3,
     "isolement": 3,
     "situations": "",
