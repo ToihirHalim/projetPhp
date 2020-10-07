@@ -133,9 +133,9 @@ class FormulaireController extends Controller
         $formulaire->update($data);
         
         $data = [
-            "activeCases" => $activeCases,
-            "totalCases" => $totalCases,
-            "dailyCases" => $dailyCases,
+            "activeCases" => $activeCases ? $activeCases : 0,
+            "totalCases" => $totalCases ? $totalCases : 0,
+            "dailyCases" => $dailyCases ? $dailyCases : 0,
             "dailyRecovered" => $dailyRecovered ? $dailyRecovered  : 0
         ];
 
